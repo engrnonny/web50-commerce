@@ -1,10 +1,10 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse
 
-from .models import User
+from .models import *
 
 
 def index(request):
@@ -61,3 +61,27 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "auctions/register.html")
+
+# New Listing Page
+# New Listing Page
+# New Listing Page
+def new_listing(request):
+    if request.method == "POST":        
+        title = request.POST["title"]   
+        description = request.POST["description"]   
+        category = request.POST["category"]   
+        bid = request.POST["bid"]   
+        image = request.POST["image"]
+
+        try:
+            listing = Auction.objects.create(title=title, description=description, category=category, image=image)
+            listing.save()
+            print(listing)
+            return redirect( "index" )
+
+        except IntegrityError:
+            return render(request, "auctions/new-listing.html", {
+                "message": "Listing already exist"
+            })
+    else:
+        return render(request, "auctions/new-listing.html")
