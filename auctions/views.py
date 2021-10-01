@@ -8,7 +8,11 @@ from .models import *
 
 
 def index(request):
-    return render(request, "auctions/index.html")
+    active_listings = Auction.objects.all().order_by('title')
+    context = {
+        "active_listings": active_listings
+    }
+    return render(request, "auctions/index.html", context)
 
 
 def login_view(request):
@@ -72,16 +76,24 @@ def new_listing(request):
         category = request.POST["category"]   
         bid = request.POST["bid"]   
         image = request.POST["image"]
+        
+        if request.user.is_authenticated:
+            user = request.user
+            try:
+                listing = Auction(title=title, description=description, category=category, image=image, lister=user)
+                listing.save()
+                listing_bid = Bid(auction=listing, starting_bid=bid)
+                listing_bid.save()
+                print(listing)
+                print(listing_bid)
+                return redirect( "index" )
 
-        try:
-            listing = Auction.objects.create(title=title, description=description, category=category, image=image)
-            listing.save()
-            print(listing)
-            return redirect( "index" )
+            except IntegrityError:
+                return render(request, "auctions/new-listing.html", {
+                    "message": "Listing already exist"
+                })
 
-        except IntegrityError:
-            return render(request, "auctions/new-listing.html", {
-                "message": "Listing already exist"
-            })
+        else:
+            return redirect("login")
     else:
         return render(request, "auctions/new-listing.html")

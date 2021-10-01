@@ -2,6 +2,18 @@
 
 {% block body %}
     <h2>Active Listings</h2>
+    {% if active_listings %}
+        {% for active_listing in active_listings %}
+        <ul>
+            <li>
+                <div>
+                {{ active_listing.id }} - {{ active_listing.title }} - {{ active_listing.description }} - {{ active_listing.category }} - {{ active_listing.image }}
+                </div>
+            </li>
+
+        </ul>
+        {% endfor %}
+    {% endif %}
 
     TODO
 {% endblock %}
