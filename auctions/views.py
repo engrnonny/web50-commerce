@@ -79,19 +79,18 @@ def new_listing(request):
         
         if request.user.is_authenticated:
             user = request.user
-            try:
-                listing = Auction(title=title, description=description, category=category, image=image, lister=user)
+            title_test = Auction.objects.filter(title=title)
+
+            if not title_test:
+                listing = Auction(title=title, description=description, category=category, image=image, lister=user, starting_bid=bid)
                 listing.save()
-                listing_bid = Bid(auction=listing, starting_bid=bid)
-                listing_bid.save()
                 print(listing)
-                print(listing_bid)
                 return redirect( "index" )
 
-            except IntegrityError:
+            else:
                 return render(request, "auctions/new-listing.html", {
                     "message": "Listing already exist"
-                })
+                })            
 
         else:
             return redirect("login")
