@@ -7,10 +7,13 @@
         <ul>
             <li>
                 <div>
-                {{ active_listing.title }} - {{ active_listing.description }} - {{ active_listing.category }} - {{ active_listing.image }} - {{ active_listing. }}
+                    <p>{{ active_listing.title }}</p> 
+                    <p>{{ active_listing.description }}</p>
+                    <p>{{ active_listing.category }}</p>
+                    <p>${{ active_listing.current_price }}</p>
+                    <p>{{ active_listing.image }}</p>
                 </div>
             </li>
-
         </ul>
         {% endfor %}
     {% endif %}

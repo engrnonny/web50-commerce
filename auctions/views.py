@@ -96,3 +96,12 @@ def new_listing(request):
             return redirect("login")
     else:
         return render(request, "auctions/new-listing.html")
+
+
+
+# New Listing Page
+# New Listing Page
+# New Listing Page
+def single_listing(request, slug):
+    pass
+
