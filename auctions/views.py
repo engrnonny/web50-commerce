@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
@@ -102,6 +103,28 @@ def new_listing(request):
 # New Listing Page
 # New Listing Page
 # New Listing Page
-def single_listing(request, slug):
-    pass
+def listing(request, slug):
+    listing = Auction.objects.get(title=slug)
+    in_wishlist = Wishlist.objects.filter(user=request.user, auction=listing)
+    context = {
+        'listing': listing,
+        'in_wishlist': in_wishlist
+    }
+    return render(request, "auctions/listing.html", context)
+
+# Add or Delete to wishlist
+# Add or Delete to wishlist
+# Add or Delete to wishlist
+@login_required
+def add_or_delete_wishlist(request, slug):
+    listing = Auction.objects.get(title=slug)
+    wishlist = Wishlist.objects.filter(user=request.user, auction=listing)
+    if wishlist:
+        wishlist.delete()
+    else:
+        wishlist = Wishlist.objects.create(user=request.user)
+        wishlist.auction.set(listing)
+        wishlist.save()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
 

@@ -7,7 +7,7 @@
         <ul>
             <li>
                 <div>
-                    <p>{{ active_listing.title }}</p> 
+                    <p><a href="{% url 'listing' active_listing.title %}">{{ active_listing.title }}</a></p> 
                     <p>{{ active_listing.description }}</p>
                     <p>{{ active_listing.category }}</p>
                     <p>${{ active_listing.current_price }}</p>

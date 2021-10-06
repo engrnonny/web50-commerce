@@ -1,0 +1,23 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Active Listings</h2>
+    {% if listing %}
+        
+        {% if user.is_authenticated %}
+            {% if in_wishlist %}
+                <button href="{% url 'add-or-delete-wishlist' listing.title %}">Remove from wishlist</button>
+            {% else %}
+                <a href="{% url 'add-or-delete-wishlist' listing.title %}">Add to wishlist</a>
+            {% endif %}
+        {% endif %}
+        <div>
+            <p>{{ listing.title }}</p> 
+            <p>{{ listing.description }}</p>
+            <p>{{ listing.category }}</p>
+            <p>${{ listing.current_price }}</p>
+            <p>{{ listing.image }}</p>
+        </div>
+    {% endif %}
+
+{% endblock %}
