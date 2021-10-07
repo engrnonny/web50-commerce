@@ -6,7 +6,7 @@
         
         {% if user.is_authenticated %}
             {% if in_wishlist %}
-                <button href="{% url 'add-or-delete-wishlist' listing.title %}">Remove from wishlist</button>
+                <a href="{% url 'add-or-delete-wishlist' listing.title %}">Remove from wishlist</a>
             {% else %}
                 <a href="{% url 'add-or-delete-wishlist' listing.title %}">Add to wishlist</a>
             {% endif %}

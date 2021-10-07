@@ -105,7 +105,7 @@ def new_listing(request):
 # New Listing Page
 def listing(request, slug):
     listing = Auction.objects.get(title=slug)
-    in_wishlist = Wishlist.objects.filter(user=request.user, auction=listing)
+    in_wishlist = Wishlist.objects.filter(user=request.user, auctions=listing)
     context = {
         'listing': listing,
         'in_wishlist': in_wishlist
@@ -117,14 +117,29 @@ def listing(request, slug):
 # Add or Delete to wishlist
 @login_required
 def add_or_delete_wishlist(request, slug):
-    listing = Auction.objects.get(title=slug)
-    wishlist = Wishlist.objects.filter(user=request.user, auction=listing)
+    listing = Auction.objects.filter(title=slug)[0]
+    wishlist = Wishlist.objects.filter(user=request.user)
+    # print(1)
+    # print(listing)
+    # print(wishlist)
     if wishlist:
-        wishlist.delete()
+        auction_wishlist = Wishlist.objects.filter(user=request.user, auctions=listing)
+        print(2)
+        print(auction_wishlist)
+        if auction_wishlist:
+            wishlist.auctions.remove(listing)
+            wishlist.save()
+        else:
+            wishlist.auctions.add(listing)
+            wishlist.save()
+            print(3)
+            print(wishlist.auction)
     else:
-        wishlist = Wishlist.objects.create(user=request.user)
-        wishlist.auction.set(listing)
+        wishlist = Wishlist(user=request.user)
         wishlist.save()
+        wishlist.auctions.add(listing)
+        wishlist.save()
+        print(4)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
