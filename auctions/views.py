@@ -104,21 +104,33 @@ def new_listing(request):
 # New Listing Page
 # New Listing Page
 def listing(request, slug):
-    user = request.user
     listing = Auction.objects.get(title=slug)
-    # wishlist = Wishlist.objects.get(user=user)
-    # print(wishlist)
-    # if wishlist.filter(auctions=listing).exists():
-    #     in_wishlist = wishlist.auctions.get(auction=listing)
-    #     context = {
-    #         'listing': listing,
-    #         'in_wishlist': in_wishlist
-    #     }
-    # else:
-    context = {
-        'listing': listing
-    }
-    return render(request, "auctions/listing.html", context)
+    user = request.user
+    if user.is_authenticated:
+        if Wishlist.objects.filter(user=user).exists():
+            wishlist = Wishlist.objects.get(user=user)
+            if Auction.objects.filter(wishlist__id=wishlist.id, title=listing.title).exists():
+                return render(request, "auctions/listing.html", 
+                context = {
+                    'auction_in_wishlist': 'yes',
+                    'listing': listing
+                })
+            else:
+                return render(request, "auctions/listing.html", 
+                context = {
+                    'listing': listing
+                })
+        else:
+            return render(request, "auctions/listing.html", 
+            context = {
+                'listing': listing
+            })
+
+    else:
+        context = {
+            'listing': listing
+        }
+        return render(request, "auctions/listing.html", context)
 
 # Add or Delete to wishlist
 # Add or Delete to wishlist
@@ -128,20 +140,14 @@ def add_or_delete_wishlist(request, slug):
     listing = Auction.objects.get(title=slug)
     if Wishlist.objects.filter(user=request.user).exists():
         wishlist = Wishlist.objects.get(user=request.user)
-        auction_in_wishlist = Auction.objects.filter(wishlist__id=wishlist.id)
+        auction_in_wishlist = Auction.objects.filter(wishlist__id=wishlist.id, title=listing.title)
         if auction_in_wishlist:
-            print(2)
-            print(auction_in_wishlist)
             wishlist.auctions.remove(listing)
-            print(wishlist.auctions.all())
         else:
             wishlist.auctions.add(listing)
-            print(3)
-            print(wishlist.auctions.filter(title=listing.title))
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     else:
         wishlist = Wishlist(user=request.user)
         wishlist.save()
         wishlist.auctions.add(listing)
-        print(4)
-        print(wishlist.auctions.filter(title=listing.title))
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

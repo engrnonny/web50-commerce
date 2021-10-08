@@ -5,22 +5,43 @@
     {% if listing %}
         
         {% if user.is_authenticated %}
-            {% if in_wishlist %}
-                <a href="{% url 'add-or-delete-wishlist' listing.title %}">Remove from wishlist</a>
-                <p>
-                    {{ in_wishlist.auctions }}
-                </p>
+            {% if auction_in_wishlist %}
+                <div>
+                    <span>
+                        {{ listing.title }} is in your wishlist.
+                    </span>
+                    <a href="{% url 'add-or-delete-wishlist' listing.title %}">Remove from wishlist</a>
+                </div>
             {% else %}
-                <a href="{% url 'add-or-delete-wishlist' listing.title %}">Add to wishlist</a>
+                <div>
+                    <a href="{% url 'add-or-delete-wishlist' listing.title %}">Add to wishlist</a>
+                </div>
             {% endif %}
         {% endif %}
         <div>
             <p>{{ listing.title }}</p> 
             <p>{{ listing.description }}</p>
             <p>{{ listing.category }}</p>
-            <p>${{ listing.current_price }}</p>
             <p>{{ listing.image }}</p>
+            <p>${{ listing.current_price }}</p>
+            <div>
+                {% if user.is_authenticated %}
+                
+                <p>${{ listing.starting_bid }}</p>
+                <div>
+                    <form>
+                        <input type="number" placeholder="Place your bid">
+                        <input type="submit">
+                    </form>
+                </div>
+
+                {% else %}
+                    ${{ listing.starting_bid }}
+                {% endif %}
+
+            </div>
         </div>
+
     {% endif %}
 
 {% endblock %}
