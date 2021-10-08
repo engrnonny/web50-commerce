@@ -45,4 +45,4 @@ class Wishlist(models.Model):
     auctions = models.ManyToManyField(Auction)
     
     def __str__(self):
-        return f"{self.user}"
+        return f"{self.user} - {self.auctions}"

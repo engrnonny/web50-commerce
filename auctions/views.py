@@ -104,11 +104,19 @@ def new_listing(request):
 # New Listing Page
 # New Listing Page
 def listing(request, slug):
+    user = request.user
     listing = Auction.objects.get(title=slug)
-    in_wishlist = Wishlist.objects.filter(user=request.user, auctions=listing)
+    # wishlist = Wishlist.objects.get(user=user)
+    # print(wishlist)
+    # if wishlist.filter(auctions=listing).exists():
+    #     in_wishlist = wishlist.auctions.get(auction=listing)
+    #     context = {
+    #         'listing': listing,
+    #         'in_wishlist': in_wishlist
+    #     }
+    # else:
     context = {
-        'listing': listing,
-        'in_wishlist': in_wishlist
+        'listing': listing
     }
     return render(request, "auctions/listing.html", context)
 
@@ -117,29 +125,23 @@ def listing(request, slug):
 # Add or Delete to wishlist
 @login_required
 def add_or_delete_wishlist(request, slug):
-    listing = Auction.objects.filter(title=slug)[0]
-    wishlist = Wishlist.objects.filter(user=request.user)
-    # print(1)
-    # print(listing)
-    # print(wishlist)
-    if wishlist:
-        auction_wishlist = Wishlist.objects.filter(user=request.user, auctions=listing)
-        print(2)
-        print(auction_wishlist)
-        if auction_wishlist:
+    listing = Auction.objects.get(title=slug)
+    if Wishlist.objects.filter(user=request.user).exists():
+        wishlist = Wishlist.objects.get(user=request.user)
+        auction_in_wishlist = Auction.objects.filter(wishlist__id=wishlist.id)
+        if auction_in_wishlist:
+            print(2)
+            print(auction_in_wishlist)
             wishlist.auctions.remove(listing)
-            wishlist.save()
+            print(wishlist.auctions.all())
         else:
             wishlist.auctions.add(listing)
-            wishlist.save()
             print(3)
-            print(wishlist.auction)
+            print(wishlist.auctions.filter(title=listing.title))
     else:
         wishlist = Wishlist(user=request.user)
         wishlist.save()
         wishlist.auctions.add(listing)
-        wishlist.save()
         print(4)
+        print(wishlist.auctions.filter(title=listing.title))
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
-

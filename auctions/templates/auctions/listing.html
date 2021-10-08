@@ -7,6 +7,9 @@
         {% if user.is_authenticated %}
             {% if in_wishlist %}
                 <a href="{% url 'add-or-delete-wishlist' listing.title %}">Remove from wishlist</a>
+                <p>
+                    {{ in_wishlist.auctions }}
+                </p>
             {% else %}
                 <a href="{% url 'add-or-delete-wishlist' listing.title %}">Add to wishlist</a>
             {% endif %}
