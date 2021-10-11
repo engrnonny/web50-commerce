@@ -7,13 +7,13 @@ class UserAdmin(admin.ModelAdmin):
     list_display = ['username', 'email']
 
 class AuctionAdmin(admin.ModelAdmin):
-    list_display = ['title', 'category', 'description', 'lister', 'date_added', 'image', 'bid']
+    list_display = ['title', 'category', 'description', 'lister', 'date_added', 'image', 'starting_bid', 'current_price']
 
 class BidAdmin(admin.ModelAdmin):
     list_display = ['user', 'bid', 'auction']
 
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ['auction']
+    list_display = ['auction', 'comment']
 
 class WishlistAdmin(admin.ModelAdmin):
     list_display = ['user']

@@ -23,20 +23,24 @@
             <p>{{ listing.description }}</p>
             <p>{{ listing.category }}</p>
             <p>{{ listing.image }}</p>
-            <p>${{ listing.current_price }}</p>
+            <p>${{ listing.starting_bid }}</p>
+            {% if listing.current_price %}
+                <p>${{ listing.current_price }}</p>
+            {% else %}
+                <p>There are no bids for this listing. Be the first to bid.</p>
+            {% endif %}
             <div>
-                {% if user.is_authenticated %}
-                
-                <p>${{ listing.starting_bid }}</p>
+                {% if user.is_authenticated %}                
                 <div>
-                    <form>
-                        <input type="number" placeholder="Place your bid">
-                        <input type="submit">
+                    <form action="{% url 'bid' listing.title %}" method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="bid">Your bid must be greater than the starting bid and other bids.</label>
+                            <input autofocus class="form-control" name="bid" id="bid" type="number" placeholder="Place your bid">
+                        </div>
+                        <input class="btn btn-primary" type="submit" value="Bid">
                     </form>
                 </div>
-
-                {% else %}
-                    ${{ listing.starting_bid }}
                 {% endif %}
 
             </div>

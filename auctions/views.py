@@ -1,3 +1,5 @@
+
+from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
@@ -99,7 +101,6 @@ def new_listing(request):
         return render(request, "auctions/new-listing.html")
 
 
-
 # New Listing Page
 # New Listing Page
 # New Listing Page
@@ -132,6 +133,7 @@ def listing(request, slug):
         }
         return render(request, "auctions/listing.html", context)
 
+
 # Add or Delete to wishlist
 # Add or Delete to wishlist
 # Add or Delete to wishlist
@@ -151,3 +153,36 @@ def add_or_delete_wishlist(request, slug):
         wishlist.save()
         wishlist.auctions.add(listing)
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+# Bid for a listing
+# Bid for a listing
+# Bid for a listing
+@login_required
+def bid(request, slug):
+    if request.method == 'POST':
+        listing = Auction.objects.get(title=slug)
+        user_bid = int(request.POST["bid"])
+        if Bid.objects.filter(auction=listing).exists():
+            highest_bid = Bid.objects.filter(auction=listing).order_by('-bid')[0]
+            if user_bid > highest_bid.bid:
+                new_bid = Bid(user=request.user, auction=listing, bid=user_bid)
+                new_bid.save()
+                listing.current_price = user_bid
+                listing.save()
+                messages.info(request, "Your bid has been submitted. You are currently have the highest bid.")
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            else:
+                messages.error(request, "Your bid must be higher than the current bid and the starting bid.")
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        else:
+            highest_bid = Bid(user=request.user, bid=user_bid, auction=listing)
+            highest_bid.save()
+            listing.current_price = user_bid
+            listing.save()
+            messages.info(request, "Your bid has been submitted. You are currently have the highest bid.")
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+    else:
+        pass
+        

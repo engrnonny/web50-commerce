@@ -17,7 +17,7 @@ class Auction(models.Model):
     date_added = models.DateTimeField(auto_now_add=True)
     image = models.CharField(max_length=255, blank=True, null=True)
     starting_bid = models.FloatField(blank=True, null=True)  
-    current_price = models.FloatField(default=0.00)
+    current_price = models.FloatField(blank=True, null=True)
 
 
     def __str__(self):
