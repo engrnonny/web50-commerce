@@ -7,7 +7,15 @@
         <ul>
             <li>
                 <div>
-                    <p><a href="{% url 'listing' active_listing.title %}">{{ active_listing.title }}</a></p> 
+                    <p><a href="{% url 'listing' active_listing.title %}">{{ active_listing.title }}</a>
+                    <span>
+                    {% if active_listing.closed == True %}
+                        Closed
+                    {% else %}
+                        Active
+                    {% endif %}
+                    </span>
+                    </p>
                     <p>{{ active_listing.description }}</p>
                     <p>{{ active_listing.category }}</p>
                     <p>${{ active_listing.current_price }}</p>
@@ -17,6 +25,4 @@
         </ul>
         {% endfor %}
     {% endif %}
-
-    TODO
 {% endblock %}

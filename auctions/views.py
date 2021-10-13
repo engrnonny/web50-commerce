@@ -11,7 +11,7 @@ from .models import *
 
 
 def index(request):
-    active_listings = Auction.objects.all().order_by('title')
+    active_listings = Auction.objects.filter(closed=False).order_by('title')
     context = {
         "active_listings": active_listings
     }
@@ -106,6 +106,7 @@ def new_listing(request):
 # New Listing Page
 def listing(request, slug):
     listing = Auction.objects.get(title=slug)
+    highest_bid = Bid.objects.filter(auction=listing).order_by('-bid')[0]
     user = request.user
     if user.is_authenticated:
         if Wishlist.objects.filter(user=user).exists():
@@ -114,21 +115,25 @@ def listing(request, slug):
                 return render(request, "auctions/listing.html", 
                 context = {
                     'auction_in_wishlist': 'yes',
+                    'highest_bid': highest_bid,
                     'listing': listing
                 })
             else:
                 return render(request, "auctions/listing.html", 
-                context = {
+                context = {                    
+                    'highest_bid': highest_bid,
                     'listing': listing
                 })
         else:
             return render(request, "auctions/listing.html", 
-            context = {
+            context = {                
+                'highest_bid': highest_bid,
                 'listing': listing
             })
 
     else:
-        context = {
+        context = {            
+            'highest_bid': highest_bid,
             'listing': listing
         }
         return render(request, "auctions/listing.html", context)
@@ -139,7 +144,7 @@ def listing(request, slug):
 # Add or Delete to wishlist
 @login_required
 def add_or_delete_wishlist(request, slug):
-    listing = Auction.objects.get(title=slug)
+    listing = Auction.objects.get(title=slug, closed=False)
     if Wishlist.objects.filter(user=request.user).exists():
         wishlist = Wishlist.objects.get(user=request.user)
         auction_in_wishlist = Auction.objects.filter(wishlist__id=wishlist.id, title=listing.title)
@@ -161,7 +166,7 @@ def add_or_delete_wishlist(request, slug):
 @login_required
 def bid(request, slug):
     if request.method == 'POST':
-        listing = Auction.objects.get(title=slug)
+        listing = Auction.objects.get(title=slug, closed=False)
         user_bid = int(request.POST["bid"])
         if Bid.objects.filter(auction=listing).exists():
             highest_bid = Bid.objects.filter(auction=listing).order_by('-bid')[0]
@@ -170,7 +175,7 @@ def bid(request, slug):
                 new_bid.save()
                 listing.current_price = user_bid
                 listing.save()
-                messages.info(request, "Your bid has been submitted. You are currently have the highest bid.")
+                messages.info(request, "Your bid has been submitted. You are currently the highest bid.")
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
             else:
                 messages.error(request, "Your bid must be higher than the current bid and the starting bid.")
@@ -180,9 +185,19 @@ def bid(request, slug):
             highest_bid.save()
             listing.current_price = user_bid
             listing.save()
-            messages.info(request, "Your bid has been submitted. You are currently have the highest bid.")
+            messages.info(request, "Your bid has been submitted. You are currently the highest bid.")
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
     else:
         pass
-        
+
+
+# Close a listing
+# Close a listing
+# Close a listing
+@login_required
+def close_listing(request, slug):
+    listing = Auction.objects.get(title=slug, closed=False)
+    listing.closed = True
+    listing.save()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))  

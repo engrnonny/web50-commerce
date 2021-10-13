@@ -1,10 +1,12 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Active Listings</h2>
     {% if listing %}
+    
+    <h2>{{ listing.title }}</h2>
         
-        {% if user.is_authenticated %}
+        {% if user.is_authenticated and listing.closed == False %}
+
             {% if auction_in_wishlist %}
                 <div>
                     <span>
@@ -17,7 +19,13 @@
                     <a href="{% url 'add-or-delete-wishlist' listing.title %}">Add to wishlist</a>
                 </div>
             {% endif %}
+
+        {% elif listing.closed == True %}
+            <div>
+                This listing is closed.
+            </div>
         {% endif %}
+
         <div>
             <p>{{ listing.title }}</p> 
             <p>{{ listing.description }}</p>
@@ -30,18 +38,37 @@
                 <p>There are no bids for this listing. Be the first to bid.</p>
             {% endif %}
             <div>
-                {% if user.is_authenticated %}                
-                <div>
-                    <form action="{% url 'bid' listing.title %}" method="post">
-                        {% csrf_token %}
-                        <div class="form-group">
-                            <label for="bid">Your bid must be greater than the starting bid and other bids.</label>
-                            <input autofocus class="form-control" name="bid" id="bid" type="number" placeholder="Place your bid">
+
+            {% if user.is_authenticated and listing.closed == False %}
+                {% if request.user != listing.lister %}             
+                    <div>
+                        <form action="{% url 'bid' listing.title %}" method="post">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="bid">Your bid must be greater than the starting bid and other bids.</label>
+                                <input autofocus class="form-control" name="bid" id="bid" type="number" placeholder="Place your bid">
+                            </div>
+                            <input class="btn btn-primary" type="submit" value="Bid">
+                        </form>
+                    </div>        
+                {% elif request.user == listing.lister %}
+                    {% if highest_bid %}
+                        <div>
+                            The current highest bidder is {{ highest_bid.user }}
                         </div>
-                        <input class="btn btn-primary" type="submit" value="Bid">
-                    </form>
-                </div>
+                    {% endif %}
+                    <div>
+                        <a class="btn btn-danger" href="{% url 'close-listing' listing.title %}" type="button">Close Listing</a>
+                    </div>
                 {% endif %}
+
+            {% elif request.user == listing.lister and listing.closed == True %}
+                {% if highest_bid %}
+                    <div>
+                        This Listing is closed. The highest bidder is {{ highest_bid.user }}
+                    </div>
+                {% endif %}
+            {% endif %}
 
             </div>
         </div>

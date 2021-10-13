@@ -13,11 +13,12 @@ class Auction(models.Model):
     title = models.CharField(max_length=255)
     category = models.CharField(max_length=255)
     description = models.TextField()
-    lister = models.ForeignKey(User, on_delete=models.CASCADE)
+    lister = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     date_added = models.DateTimeField(auto_now_add=True)
     image = models.CharField(max_length=255, blank=True, null=True)
     starting_bid = models.FloatField(blank=True, null=True)  
     current_price = models.FloatField(blank=True, null=True)
+    closed = models.BooleanField(default=False)
 
 
     def __str__(self):
