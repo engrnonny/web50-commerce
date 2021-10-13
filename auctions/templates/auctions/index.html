@@ -4,22 +4,38 @@
     <h2>Active Listings</h2>
     {% if active_listings %}
         {% for active_listing in active_listings %}
+            <ul>
+                <li>
+                    <div>
+                        <h4><a href="{% url 'listing' active_listing.title %}">{{ active_listing.title }}</a>
+                        <!-- {% if active_listing.closed == True %}                    
+                        <span>
+                            Closed
+                        </span>
+                        {% endif %} -->
+                        </h4>
+                        <p>{{ active_listing.description }}</p>
+                        <p>{{ active_listing.category }}</p>
+                        <p>${{ active_listing.current_price }}</p>
+                        <p>{{ active_listing.image }}</p>
+                    </div>
+                </li>
+            </ul>
+        {% endfor %}
+    {% endif %}
+
+    <h2>Closed Listings</h2>
+    {% if closed_listings %}
+        {% for closed_listing in closed_listings %}
         <ul>
             <li>
                 <div>
-                    <p><a href="{% url 'listing' active_listing.title %}">{{ active_listing.title }}</a>
-                    <span>
-                    {% if active_listing.closed == True %}
-                        Closed
-                    {% else %}
-                        Active
-                    {% endif %}
-                    </span>
-                    </p>
-                    <p>{{ active_listing.description }}</p>
-                    <p>{{ active_listing.category }}</p>
-                    <p>${{ active_listing.current_price }}</p>
-                    <p>{{ active_listing.image }}</p>
+                    <h4><a href="{% url 'listing' closed_listing.title %}">{{ closed_listing.title }}</a>
+                    </h4>
+                    <p>{{ closed_listing.description }}</p>
+                    <p>{{ closed_listing.category }}</p>
+                    <p>${{ closed_listing.current_price }}</p>
+                    <p>{{ closed_listing.image }}</p>
                 </div>
             </li>
         </ul>

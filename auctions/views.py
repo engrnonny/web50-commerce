@@ -12,8 +12,10 @@ from .models import *
 
 def index(request):
     active_listings = Auction.objects.filter(closed=False).order_by('title')
+    closed_listings = Auction.objects.filter(closed=True).order_by('title')
     context = {
-        "active_listings": active_listings
+        "active_listings": active_listings,
+        "closed_listings": closed_listings
     }
     return render(request, "auctions/index.html", context)
 
@@ -107,6 +109,7 @@ def new_listing(request):
 def listing(request, slug):
     listing = Auction.objects.get(title=slug)
     highest_bid = Bid.objects.filter(auction=listing).order_by('-bid')[0]
+    comments = Comment.objects.filter(auction=listing).order_by('-date_added')
     user = request.user
     if user.is_authenticated:
         if Wishlist.objects.filter(user=user).exists():
@@ -115,24 +118,28 @@ def listing(request, slug):
                 return render(request, "auctions/listing.html", 
                 context = {
                     'auction_in_wishlist': 'yes',
+                    'comments': comments,
                     'highest_bid': highest_bid,
                     'listing': listing
                 })
             else:
                 return render(request, "auctions/listing.html", 
-                context = {                    
+                context = {       
+                    'comments': comments,             
                     'highest_bid': highest_bid,
                     'listing': listing
                 })
         else:
             return render(request, "auctions/listing.html", 
-            context = {                
+            context = {        
+                'comments': comments,        
                 'highest_bid': highest_bid,
                 'listing': listing
             })
 
     else:
-        context = {            
+        context = {          
+            'comments': comments,  
             'highest_bid': highest_bid,
             'listing': listing
         }
@@ -201,3 +208,17 @@ def close_listing(request, slug):
     listing.closed = True
     listing.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))  
+
+
+# Comment on a listing
+@login_required
+def comment(request, slug):
+    if request.method == "POST":
+        listing = Auction.objects.get(title=slug, closed=False)
+        comment_message = request.POST["message"]
+        comment = Comment(auction=listing, message=comment_message, user=request.user)
+        comment.save()
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER')) 
+    
+    else:
+        pass

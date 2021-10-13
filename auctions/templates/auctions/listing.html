@@ -2,7 +2,7 @@
 
 {% block body %}
     {% if listing %}
-    
+
     <h2>{{ listing.title }}</h2>
         
         {% if user.is_authenticated and listing.closed == False %}
@@ -19,11 +19,19 @@
                     <a href="{% url 'add-or-delete-wishlist' listing.title %}">Add to wishlist</a>
                 </div>
             {% endif %}
+        
 
-        {% elif listing.closed == True %}
-            <div>
-                This listing is closed.
-            </div>
+
+        {% elif user.is_authenticated and listing.closed == True %}
+            {% if request.user == highest_bid.user %}
+                <div>
+                    Congratulations, You won this auction!
+                </div>
+            {% else %}
+                <div>
+                    This listing is closed.
+                </div>
+            {% endif %}
         {% endif %}
 
         <div>
@@ -32,6 +40,7 @@
             <p>{{ listing.category }}</p>
             <p>{{ listing.image }}</p>
             <p>${{ listing.starting_bid }}</p>
+
             {% if listing.current_price %}
                 <p>${{ listing.current_price }}</p>
             {% else %}
@@ -75,4 +84,29 @@
 
     {% endif %}
 
+
+    {% if comments %}
+        <div>
+        {% for comment in comments %}
+            <p>
+                {{ comment.user }}
+            </p>
+            <p>
+                {{ comment.message }}
+            </p>
+        {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if user.is_authenticated %}
+        <div>
+            <form action="{% url 'comment' %}" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <textarea class="form-control" autofocus type="text" name="message" placeholder="Comment"></textarea>
+                </div>
+                <input class="btn btn-primary" type="submit" value="Post">
+            </form>
+        </div>
+    {% endif %}
 {% endblock %}
