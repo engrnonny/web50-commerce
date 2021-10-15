@@ -108,39 +108,62 @@ def new_listing(request):
 # New Listing Page
 def listing(request, slug):
     listing = Auction.objects.get(title=slug)
-    highest_bid = Bid.objects.filter(auction=listing).order_by('-bid')[0]
     comments = Comment.objects.filter(auction=listing).order_by('-date_added')
     user = request.user
     if user.is_authenticated:
         if Wishlist.objects.filter(user=user).exists():
             wishlist = Wishlist.objects.get(user=user)
-            if Auction.objects.filter(wishlist__id=wishlist.id, title=listing.title).exists():
-                return render(request, "auctions/listing.html", 
+            if Bid.objects.filter(auction=listing).order_by('-bid').exists():
+                highest_bid = Bid.objects.filter(auction=listing).order_by('-bid')[0]
+                if Auction.objects.filter(wishlist__id=wishlist.id, title=listing.title).exists():
+                    context = {
+                        'auction_in_wishlist': 'yes',
+                        'comments': comments,
+                        'highest_bid': highest_bid,
+                        'listing': listing
+                    }
+                    return render(request, "auctions/listing.html", context)
+                else:                    
+                    context = {
+                        'comments': comments,
+                        'highest_bid': highest_bid,
+                        'listing': listing
+                    }
+                    return render(request, "auctions/listing.html", context)
+            else:     
+                if Auction.objects.filter(wishlist__id=wishlist.id, title=listing.title).exists():
+                    context = {
+                        'auction_in_wishlist': 'yes',
+                        'comments': comments,
+                        'listing': listing
+                    }
+                    return render(request, "auctions/listing.html", context)
+                else:                    
+                    context = {
+                        'comments': comments,
+                        'listing': listing
+                    }
+                    return render(request, "auctions/listing.html", context) 
+                
+        else:
+            if Bid.objects.filter(auction=listing).order_by('-bid')[0].exists():
+                highest_bid = Bid.objects.filter(auction=listing).order_by('-bid')[0]
                 context = {
-                    'auction_in_wishlist': 'yes',
                     'comments': comments,
                     'highest_bid': highest_bid,
                     'listing': listing
-                })
-            else:
-                return render(request, "auctions/listing.html", 
-                context = {       
-                    'comments': comments,             
-                    'highest_bid': highest_bid,
+                }
+                return render(request, "auctions/listing.html", context)
+            else:                    
+                context = {
+                    'comments': comments,
                     'listing': listing
-                })
-        else:
-            return render(request, "auctions/listing.html", 
-            context = {        
-                'comments': comments,        
-                'highest_bid': highest_bid,
-                'listing': listing
-            })
+                }
+                return render(request, "auctions/listing.html", context) 
 
     else:
         context = {          
             'comments': comments,  
-            'highest_bid': highest_bid,
             'listing': listing
         }
         return render(request, "auctions/listing.html", context)

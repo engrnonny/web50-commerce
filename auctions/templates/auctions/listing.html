@@ -96,11 +96,16 @@
             </p>
         {% endfor %}
         </div>
+
+    {% else %}
+        <div>
+            There are no comments for this listing.
+        </div>
     {% endif %}
 
-    {% if user.is_authenticated %}
+    {% if user.is_authenticated and listing.closed == False %}
         <div>
-            <form action="{% url 'comment' %}" method="post">
+            <form action="{% url 'comment' listing.title %}" method="post">
                 {% csrf_token %}
                 <div class="form-group">
                     <textarea class="form-control" autofocus type="text" name="message" placeholder="Comment"></textarea>
