@@ -12,5 +12,8 @@ urlpatterns = [
     path("add-or-delete-wishlist/<slug>", views.add_or_delete_wishlist, name="add-or-delete-wishlist"),
     path("listings/<slug>/bid", views.bid, name="bid"),
     path("listings/<slug>/close", views.close_listing, name="close-listing"),
-    path("listings/<slug>/comment", views.comment, name="comment")
+    path("listings/<slug>/comment", views.comment, name="comment"),
+    path("wishlist", views.wishlist, name="wishlist"),
+    path("categories", views.categories, name="categories"),
+    path("categories/<slug>", views.category, name="category")
 ]

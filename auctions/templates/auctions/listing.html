@@ -38,7 +38,7 @@
             <p>{{ listing.title }}</p> 
             <p>{{ listing.description }}</p>
             <p>{{ listing.category }}</p>
-            <p>{{ listing.image }}</p>
+            <img src={{ listing.image }}>
             <p>${{ listing.starting_bid }}</p>
 
             {% if listing.current_price %}

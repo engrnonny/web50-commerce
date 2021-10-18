@@ -1,0 +1,20 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+    {% if listings %}
+        <ul>
+            {% for listing in listings %}
+            <li>
+                <a href="{% url 'listing' listing.title %}">{{ listing.title }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+    <div>
+        You do not have any listing in your wishlist. 
+    </div>
+    {% endif %}
+        
+        
+{% endblock %}

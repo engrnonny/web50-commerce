@@ -18,9 +18,13 @@ class CommentAdmin(admin.ModelAdmin):
 class WishlistAdmin(admin.ModelAdmin):
     list_display = ['user']
 
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ['category']
+
 
 admin.site.register(User, UserAdmin)
 admin.site.register(Auction, AuctionAdmin)
 admin.site.register(Bid, BidAdmin)
 admin.site.register(Comment, CommentAdmin)
 admin.site.register(Wishlist, WishlistAdmin)
+admin.site.register(Category, CategoryAdmin)

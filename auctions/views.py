@@ -86,6 +86,12 @@ def new_listing(request):
             user = request.user
             title_test = Auction.objects.filter(title=title)
 
+            if Category.objects.filter(category=category).exists():
+                pass
+            else:
+                new_category = Category(category=category)
+                new_category.save()
+
             if not title_test:
                 listing = Auction(title=title, description=description, category=category, image=image, lister=user, starting_bid=bid)
                 listing.save()
@@ -234,6 +240,8 @@ def close_listing(request, slug):
 
 
 # Comment on a listing
+# Comment on a listing
+# Comment on a listing
 @login_required
 def comment(request, slug):
     if request.method == "POST":
@@ -245,3 +253,43 @@ def comment(request, slug):
     
     else:
         pass
+
+
+# Wishlist page
+# Wishlist page
+# Wishlist page
+@login_required
+def wishlist(request):
+    if Wishlist.objects.filter(user=request.user).exists():
+        wishlist = Wishlist.objects.get(user=request.user)
+        
+        listings = Auction.objects.filter(wishlist__id=wishlist.id)
+        
+        context = {
+            'listings': listings
+        }
+        return render(request, "auctions/wishlist.html", context)
+
+    else:
+        return render(request, "auctions/wishlist.html")
+
+
+# Categories page
+# Categories page
+# Categories page
+def categories(request):
+    categories = Category.objects.all()
+    context = {
+        'categories': categories
+    }
+    return render(request, "auctions/categories.html", context)
+
+
+# Category page
+def category(request, slug):
+    listings = Auction.objects.filter(category=slug, closed=False)
+    context = {
+        'listings': listings
+    }
+    return render(request, "auctions/category.html", context)
+

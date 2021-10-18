@@ -1,27 +1,31 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
+    <div>
+        View listings in <a href="{% url 'categories' %}">categories</a>
+    </div>
     <h2>Active Listings</h2>
     {% if active_listings %}
+        <div class="listings">
         {% for active_listing in active_listings %}
-            <ul>
-                <li>
-                    <div>
-                        <h4><a href="{% url 'listing' active_listing.title %}">{{ active_listing.title }}</a>
-                        <!-- {% if active_listing.closed == True %}                    
-                        <span>
-                            Closed
-                        </span>
-                        {% endif %} -->
-                        </h4>
-                        <p>{{ active_listing.description }}</p>
-                        <p>{{ active_listing.category }}</p>
-                        <p>${{ active_listing.current_price }}</p>
-                        <p>{{ active_listing.image }}</p>
-                    </div>
-                </li>
-            </ul>
+            <div class="listing">
+                <div class="listing-info">
+                    <h4>
+                        <a class="product-name" href="{% url 'listing' active_listing.title %}">
+                            <strong>{{ active_listing.title }}</strong>
+                        </a>
+                    </h4>
+                    <div class="product-description card card-body">{{ active_listing.description }}</div>
+                    <a class="product-sub-category" href="{% url 'category' active_listing.category %}">{{ active_listing.category }}</a>
+                    <p>${{ active_listing.current_price }}</p>
+                    
+                </div>
+                <div class="product-carousel-item carousel-item carousel-size active">
+                    <img src={{ active_listing.image }} alt={{ active_listing.title }}>
+                </div>                        
+            </div>
         {% endfor %}
+        </div>
     {% endif %}
 
     <h2>Closed Listings</h2>
@@ -35,7 +39,7 @@
                     <p>{{ closed_listing.description }}</p>
                     <p>{{ closed_listing.category }}</p>
                     <p>${{ closed_listing.current_price }}</p>
-                    <p>{{ closed_listing.image }}</p>
+                    <img src={{ closed_listing.image }}>
                 </div>
             </li>
         </ul>

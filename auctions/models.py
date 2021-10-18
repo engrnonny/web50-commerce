@@ -49,3 +49,6 @@ class Wishlist(models.Model):
     
     def __str__(self):
         return f"{self.user} - {self.auctions}"
+
+class Category(models.Model):
+    category = models.CharField(max_length=255)
