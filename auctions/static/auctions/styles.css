@@ -30,9 +30,50 @@
     --box-shadow: 0 0 12px 0 rgb(0 0 0 / 12%);
 }
 
-body {
+main {
     padding: 10px;
+    text-decoration: none;
 }
+
+.btn-1 {
+  padding: 0.25rem;
+  width: 100%;
+  color: var(--color-3);
+  text-align: center;
+}
+
+.btn-1:hover {
+  color: var(--color-3);
+  font-size: var(--font-size-phone-2);
+  font-weight: bold;
+}
+
+.btn-1:active {
+  color: var(--color-2);
+  background-color: var(--color-3);
+  font-size: var(--font-size-phone-2);
+}
+
+@media (min-width: 675px) {
+  .btn-1:hover {
+    font-size: 1.1rem;
+  }
+
+  .btn-1:active {
+    font-size: 1.1rem;
+  }
+}
+
+.float-right {
+  float: right;
+  text-align: justify;
+}
+
+.info-theme {
+  color: var(--color-2);
+  background-color: var(--color-3);
+}
+
 
 .listings {
     display: grid;
@@ -160,16 +201,95 @@ body {
 }
 
 
-.listing-carousel-item {
+.listing-item {
     height: 100%;
     width: 100%;
     text-align: center;
 }
 
-.listing-carousel-item img {
+.listing-item img {
     width: 100%;
     height: 100%;
     margin: auto;
     object-fit: contain;
     object-position: center;
+}
+
+
+.listing-detail-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: var(--font-size-phone-1);
+  width: 100%;
+  padding-bottom: 2.5rem;
+  margin-top: 2rem;
+  margin-bottom: 5rem;
+}
+
+@media (min-width: 675px) {
+  .listing-detail-page {
+    flex-direction: row;
+    justify-content: space-evenly;
+    font-size: var(--font-size-others-1);
+  }
+}
+
+.listing-detail-head,
+.listing-detail-info {
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  width: 90%;
+  margin-bottom: 2rem;
+}
+
+@media (min-width: 675px) {
+  .listing-detail-head,
+  .listing-detail-info {
+    width: 45%;
+  }
+}
+
+.listing-detail {
+  height: 25rem;
+  width: 100%;
+  margin: auto;
+  object-position: center;
+}
+
+@media (min-width: 675px) {
+  .listing-detail {
+    height: 37.5rem;
+  }
+}
+
+.listing-detail-inner {
+  height: 100%;
+  width: 100%;
+  margin: auto;
+}
+
+.listing-detail-item {
+  height: 100%;
+  width: 100%;
+  text-align: center;
+}
+
+.listing-detail-item img {
+  width: 100%;
+  height: 100%;
+  margin: auto;
+  object-fit: contain;
+  object-position: center;
+}
+
+.listing-detail-info-sub {
+  margin-bottom: 1rem;
+  width: 100%;
+}
+
+
+.txt-center {
+  text-align: center;
 }

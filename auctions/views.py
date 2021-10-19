@@ -117,13 +117,13 @@ def listing(request, slug):
     comments = Comment.objects.filter(auction=listing).order_by('-date_added')
     user = request.user
     if user.is_authenticated:
-        if Wishlist.objects.filter(user=user).exists():
-            wishlist = Wishlist.objects.get(user=user)
+        if Watchlist.objects.filter(user=user).exists():
+            watchlist = Watchlist.objects.get(user=user)
             if Bid.objects.filter(auction=listing).order_by('-bid').exists():
                 highest_bid = Bid.objects.filter(auction=listing).order_by('-bid')[0]
-                if Auction.objects.filter(wishlist__id=wishlist.id, title=listing.title).exists():
+                if Auction.objects.filter(watchlist__id=watchlist.id, title=listing.title).exists():
                     context = {
-                        'auction_in_wishlist': 'yes',
+                        'auction_in_watchlist': 'yes',
                         'comments': comments,
                         'highest_bid': highest_bid,
                         'listing': listing
@@ -137,9 +137,9 @@ def listing(request, slug):
                     }
                     return render(request, "auctions/listing.html", context)
             else:     
-                if Auction.objects.filter(wishlist__id=wishlist.id, title=listing.title).exists():
+                if Auction.objects.filter(watchlist__id=watchlist.id, title=listing.title).exists():
                     context = {
-                        'auction_in_wishlist': 'yes',
+                        'auction_in_watchlist': 'yes',
                         'comments': comments,
                         'listing': listing
                     }
@@ -175,24 +175,24 @@ def listing(request, slug):
         return render(request, "auctions/listing.html", context)
 
 
-# Add or Delete to wishlist
-# Add or Delete to wishlist
-# Add or Delete to wishlist
+# Add or Delete to watchlist
+# Add or Delete to watchlist
+# Add or Delete to watchlist
 @login_required
-def add_or_delete_wishlist(request, slug):
+def add_or_delete_watchlist(request, slug):
     listing = Auction.objects.get(title=slug, closed=False)
-    if Wishlist.objects.filter(user=request.user).exists():
-        wishlist = Wishlist.objects.get(user=request.user)
-        auction_in_wishlist = Auction.objects.filter(wishlist__id=wishlist.id, title=listing.title)
-        if auction_in_wishlist:
-            wishlist.auctions.remove(listing)
+    if Watchlist.objects.filter(user=request.user).exists():
+        watchlist = Watchlist.objects.get(user=request.user)
+        auction_in_watchlist = Auction.objects.filter(watchlist__id=watchlist.id, title=listing.title)
+        if auction_in_watchlist:
+            watchlist.auctions.remove(listing)
         else:
-            wishlist.auctions.add(listing)
+            watchlist.auctions.add(listing)
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     else:
-        wishlist = Wishlist(user=request.user)
-        wishlist.save()
-        wishlist.auctions.add(listing)
+        watchlist = Watchlist(user=request.user)
+        watchlist.save()
+        watchlist.auctions.add(listing)
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
@@ -206,7 +206,7 @@ def bid(request, slug):
         user_bid = int(request.POST["bid"])
         if Bid.objects.filter(auction=listing).exists():
             highest_bid = Bid.objects.filter(auction=listing).order_by('-bid')[0]
-            if user_bid > highest_bid.bid:
+            if user_bid > highest_bid.bid and user_bid > listing.starting_bid:
                 new_bid = Bid(user=request.user, auction=listing, bid=user_bid)
                 new_bid.save()
                 listing.current_price = user_bid
@@ -255,23 +255,23 @@ def comment(request, slug):
         pass
 
 
-# Wishlist page
-# Wishlist page
-# Wishlist page
+# watchlist page
+# watchlist page
+# watchlist page
 @login_required
-def wishlist(request):
-    if Wishlist.objects.filter(user=request.user).exists():
-        wishlist = Wishlist.objects.get(user=request.user)
+def watchlist(request):
+    if Watchlist.objects.filter(user=request.user).exists():
+        watchlist = Watchlist.objects.get(user=request.user)
         
-        listings = Auction.objects.filter(wishlist__id=wishlist.id)
+        listings = Auction.objects.filter(watchlist__id=watchlist.id)
         
         context = {
             'listings': listings
         }
-        return render(request, "auctions/wishlist.html", context)
+        return render(request, "auctions/watchlist.html", context)
 
     else:
-        return render(request, "auctions/wishlist.html")
+        return render(request, "auctions/watchlist.html")
 
 
 # Categories page
@@ -289,7 +289,8 @@ def categories(request):
 def category(request, slug):
     listings = Auction.objects.filter(category=slug, closed=False)
     context = {
-        'listings': listings
+        'listings': listings,
+        'category': slug
     }
     return render(request, "auctions/category.html", context)
 

@@ -24,7 +24,7 @@
                     {% endif %}
                     
                 </div>
-                <div class="listing-carousel-item carousel-item carousel-size active">
+                <div class="listing-item">
                     <img src={{ active_listing.image }} alt={{ active_listing.title }}>
                 </div>                        
             </div>
@@ -39,7 +39,7 @@
             <div class="listing">
                 <div class="listing-info">
                     <h4>
-                        <a class="color-2 listing-name" href="{% url 'listing' closed_listing.title %}">
+                        <a class="color-4 listing-name" href="{% url 'listing' closed_listing.title %}">
                             <strong>{{ closed_listing.title }}</strong>
                         </a>
                     </h4>
@@ -52,7 +52,7 @@
                     {% endif %}
                     
                 </div>
-                <div class="listing-carousel-item carousel-item carousel-size active">
+                <div class="listing-item">
                     <img src={{ closed_listing.image }} alt={{ closed_listing.title }}>
                 </div>                        
             </div>

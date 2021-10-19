@@ -1,22 +1,45 @@
 {% extends "auctions/layout.html" %}
 
+{% block title %}{{ category }} | Category{% endblock %}
+
 {% block body %}
-    <h2>Active Listings</h2>
+<main>
+    
     {% if listings %}
+        <h2>Active Listings</h2>
+        <div class="listings">
         {% for listing in listings %}
-            <ul>
-                <li>
-                    <div>
-                        <h4><a href="{% url 'listing' listing.title %}">{{ listing.title }}</a>
-                        </h4>
-                        <p>{{ listing.description }}</p>
-                        <p>{{ listing.category }}</p>
-                        <p>${{ listing.current_price }}</p>
-                        <p>{{ listing.image }}</p>
+            <div class="listing">
+                <div class="listing-info">
+                    <h4>
+                        <a class="color-1 listing-name" href="{% url 'listing' listing.title %}">
+                            <strong>{{ listing.title }}</strong>
+                        </a>
+                    </h4>
+                    <div class="listing-description card card-body">
+                        {{ listing.description }}
                     </div>
-                </li>
-            </ul>
+                    <a class="listing-sub-category" href="{% url 'category' listing.category %}">
+                        {{ listing.category }}
+                    </a>
+
+                    {% if listing.current_price %}
+                        <div>${{ listing.current_price }}</div>
+                    {% else %}
+                        <div>No bid yet.</div>
+                    {% endif %}
+                    
+                </div>
+                <div class="listing-item">
+                    <img src={{ listing.image }} alt={{ listing.title }}>
+                </div>                        
+            </div>
         {% endfor %}
+        </div>
+    {% else %}
+        <h2>No Active Listings</h2>
     {% endif %}
 
+    
+</main>
 {% endblock %}
