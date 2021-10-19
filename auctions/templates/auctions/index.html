@@ -11,16 +11,20 @@
             <div class="listing">
                 <div class="listing-info">
                     <h4>
-                        <a class="product-name" href="{% url 'listing' active_listing.title %}">
+                        <a class="color-1 listing-name" href="{% url 'listing' active_listing.title %}">
                             <strong>{{ active_listing.title }}</strong>
                         </a>
                     </h4>
-                    <div class="product-description card card-body">{{ active_listing.description }}</div>
-                    <a class="product-sub-category" href="{% url 'category' active_listing.category %}">{{ active_listing.category }}</a>
-                    <p>${{ active_listing.current_price }}</p>
+                    <div class="listing-description card card-body">{{ active_listing.description }}</div>
+                    <a class="listing-sub-category" href="{% url 'category' active_listing.category %}">{{ active_listing.category }}</a>
+                    {% if active_listing.current_price %}
+                        <div>${{ active_listing.current_price }}</div>
+                    {% else %}
+                        <div>No bid yet.</div>
+                    {% endif %}
                     
                 </div>
-                <div class="product-carousel-item carousel-item carousel-size active">
+                <div class="listing-carousel-item carousel-item carousel-size active">
                     <img src={{ active_listing.image }} alt={{ active_listing.title }}>
                 </div>                        
             </div>
@@ -30,19 +34,29 @@
 
     <h2>Closed Listings</h2>
     {% if closed_listings %}
+        <div class="listings">
         {% for closed_listing in closed_listings %}
-        <ul>
-            <li>
-                <div>
-                    <h4><a href="{% url 'listing' closed_listing.title %}">{{ closed_listing.title }}</a>
+            <div class="listing">
+                <div class="listing-info">
+                    <h4>
+                        <a class="color-2 listing-name" href="{% url 'listing' closed_listing.title %}">
+                            <strong>{{ closed_listing.title }}</strong>
+                        </a>
                     </h4>
-                    <p>{{ closed_listing.description }}</p>
-                    <p>{{ closed_listing.category }}</p>
-                    <p>${{ closed_listing.current_price }}</p>
-                    <img src={{ closed_listing.image }}>
+                    <div class="listing-description card card-body">{{ closed_listing.description }}</div>
+                    <a class="listing-sub-category" href="{% url 'category' closed_listing.category %}">{{ closed_listing.category }}</a>
+                    {% if closed_listing.current_price %}
+                        <div>${{ closed_listing.current_price }}</div>
+                    {% else %}
+                        <div>No bid yet.</div>
+                    {% endif %}
+                    
                 </div>
-            </li>
-        </ul>
+                <div class="listing-carousel-item carousel-item carousel-size active">
+                    <img src={{ closed_listing.image }} alt={{ closed_listing.title }}>
+                </div>                        
+            </div>
         {% endfor %}
+        </div>
     {% endif %}
 {% endblock %}

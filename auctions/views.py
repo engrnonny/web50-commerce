@@ -152,7 +152,7 @@ def listing(request, slug):
                     return render(request, "auctions/listing.html", context) 
                 
         else:
-            if Bid.objects.filter(auction=listing).order_by('-bid')[0].exists():
+            if Bid.objects.filter(auction=listing).order_by('-bid').exists():
                 highest_bid = Bid.objects.filter(auction=listing).order_by('-bid')[0]
                 context = {
                     'comments': comments,

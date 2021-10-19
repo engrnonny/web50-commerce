@@ -1,3 +1,35 @@
+
+
+/*
+    --------------
+    Variables
+    --------------
+*/
+:root {
+    --color-1: darkgreen;
+    --color-2: white;
+    --color-3: #000032;
+    --color-4: darkred;
+    --color-5: #ffcc00ec;
+    --color-6: #ffcc00be;
+    --active-color-1: #000032;
+    --active-color-2: #ffcc00;
+    --hover-color-1: #ffcc00;
+    --font-size-phone-1: .75rem;
+    --font-size-phone-2: .8rem;
+    --font-size-phone-3: .65rem;
+    --font-size-phone-4: .85rem;
+    --font-size-general-1: 1.4rem;
+    --font-size-others-1: 1rem;
+    --font-size-others-2: .75rem;
+    --font-size-others-3: 1.1rem;
+    --font-size-others-4: 1.4rem;
+    --font-size-others-hover: 1.25rem;
+    --font-family-1: Helvetica, sans-serif;
+    --font-family-2: "Brush Script MT";
+    --box-shadow: 0 0 12px 0 rgb(0 0 0 / 12%);
+}
+
 body {
     padding: 10px;
 }
@@ -43,40 +75,101 @@ body {
     height: auto;
 }
 
-.product-name {
+.listing-name {
     font-size: var(--font-size-phone-3);
     text-align: center;
     height: 3.75rem;
     padding: 0 .5rem;
     color: var(--color-2);
+}
+
+.color-1 {
     background-color: var(--color-1);
-  }
+}
+
+.color-4 {
+    background-color: var(--color-4);
+}
   
-  .product-name:hover {
+.listing-name:hover {
     font-size: 0.7rem;
     color: var(--color-2);
     box-shadow: var(--box-shadow);
-  }
+}
   
-  .product-name:active {
+.listing-name:active {
     font-size: var(--font-size-phone-3);
     color: var(--color-2);
     background-color: var(--color-3);
     box-shadow: 0 0 -12px 0 rgb(0 0 0 / 12%);
-  }
+}
   
-  @media (min-width: 675px) {
-    .product-name {
-      height: 4.25rem;
-      font-size: var(--font-size-others-1);
+@media (min-width: 675px) {
+    .listing-name {
+        height: 4.25rem;
+        font-size: var(--font-size-others-1);
     }
   
-    .product-name:hover {
-      font-size: 1.035rem;
-      height: 6rem;
+.listing-name:hover {
+    font-size: 1.035rem;
+    height: 6rem;
     }
   
-    .product-name:active {
-      font-size: var(--font-size-others-1);
+    .listing-name:active {
+    font-size: var(--font-size-others-1);
     }
-  }
+}
+
+
+.listing-description {
+    text-align: justify;
+}
+
+.listing-sub-category {
+    font-size: var(--font-size-phone-3);
+    text-align: center;
+    color: var(--color-3);
+    font-weight: bold;
+}
+  
+.listing-sub-category:hover {
+    font-size: var(--font-size-phone-1);
+    font-weight: bold;
+    color: var(--color-3);
+}
+  
+.listing-sub-category:active {
+    font-size: var(--font-size-phone-1);
+    font-weight: bold;
+    color: var(--color-2);
+    background-color: var(--color-3);
+}
+  
+@media (min-width: 675px) {
+    .listing-sub-category {
+        font-size: var(--font-size-others-1);
+    }
+  
+    .listing-sub-category:hover {
+        font-size: var(--font-size-others-3);
+    }
+
+    .listing-sub-category:active {
+        font-size: var(--font-size-others-3);
+    }
+}
+
+
+.listing-carousel-item {
+    height: 100%;
+    width: 100%;
+    text-align: center;
+}
+
+.listing-carousel-item img {
+    width: 100%;
+    height: 100%;
+    margin: auto;
+    object-fit: contain;
+    object-position: center;
+}
